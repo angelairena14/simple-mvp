@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TimeRomanNews</string>
+    <string name="time_roman_news">TimeRomanNews.</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+</resources>
