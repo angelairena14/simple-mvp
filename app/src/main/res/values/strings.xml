@@ -4,4 +4,6 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login">Login</string>
+    <string name="failed_to_load_data">Failed to Load Data</string>
+    <string name="your_token_is_expired">Your token is expired</string>
 </resources>

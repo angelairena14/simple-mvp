@@ -8,8 +8,7 @@ interface LoginContract {
         fun onSuccessLogin(response: LoginResponse)
     }
 
-    interface Presenter {
+    interface Presenter{
         fun login(email: String, password: String)
-        fun dispose()
     }
 }
