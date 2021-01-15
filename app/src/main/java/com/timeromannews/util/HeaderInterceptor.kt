@@ -1,6 +1,5 @@
 package com.timeromannews.util
 
-import android.util.Log
 import com.google.gson.Gson
 import com.timeromannews.model.RetrofitResponse
 import com.timeromannews.util.Constant.HTTP_RESPONSE_CODE.RESPONSE_200
@@ -26,9 +25,12 @@ class HeaderInterceptor : Interceptor {
                 ""
             ) else ""
         }
+        var tokenScheme =
+            if (SecurePreferences.contains("scheme")) SecurePreferences.getStringValue("scheme","")?:""
+            else "Bearer"
         var request = chain.request()
         var requestBuilder = request.newBuilder()
-            .addHeader("Authorization", "Bearer $token")
+            .addHeader("Authorization", "$tokenScheme $token")
         request = requestBuilder.build()
         var response = chain.proceed(request)
         var stringData = ""
@@ -43,7 +45,7 @@ class HeaderInterceptor : Interceptor {
                             RxBus.publish(
                                 RetrofitResponse(
                                     response.code,
-                                    obj.getString(MESSAGE),
+                                    if (obj.has(MESSAGE)) obj.getString(MESSAGE) else "",
                                     errorJson.getJSONObject(i).getString(ERROR),
                                     errorJson.getJSONObject(i).getString(NAME)
                                 )
@@ -53,7 +55,7 @@ class HeaderInterceptor : Interceptor {
                         RxBus.publish(
                             RetrofitResponse(
                                 response.code,
-                                obj.getString(MESSAGE),
+                                if (obj.has(MESSAGE)) obj.getString(MESSAGE) else "",
                                 "",
                                 ""
                             )
@@ -136,8 +138,6 @@ class HeaderInterceptor : Interceptor {
             //handling auto refresh token 1 hour before expired_time GMT+7 exceed
             calendar.add(Calendar.HOUR,-1)
             now >= calendar.time
-        } catch (e : Exception) {
-            true
-        }
+        } catch (e : Exception) { true }
     }
 }

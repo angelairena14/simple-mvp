@@ -1,12 +1,17 @@
 package com.timeromannews.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import com.timeromannews.R
 import com.timeromannews.base.BaseActivity
-import com.timeromannews.model.RetrofitResponse
 import com.timeromannews.model.LoginResponse
-import com.timeromannews.util.Constant.HTTP_RESPONSE_CODE.RESPONSE_401
+import com.timeromannews.model.RetrofitResponse
+import com.timeromannews.util.Constant.HTTP_RESPONSE_CODE.RESPONSE_422
+import com.timeromannews.util.testing.AppSchedulerProvider
 import de.adorsys.android.securestoragelibrary.SecurePreferences
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
@@ -20,13 +25,10 @@ class LoginActivity : BaseActivity(), LoginContract.View{
         setContentView(R.layout.activity_login)
         getActivityComponent()?.inject(this)
         loginPresenter.attachView(this)
+        loginPresenter.setScheduleProvider(AppSchedulerProvider())
         loginPresenter.listenError()
+        viewListener()
         if (isLoggedIn()) openNewsPage()
-
-        btn_login.setOnClickListener {
-            clearError()
-            loginPresenter.login(et_email.text.toString(),et_password.text.toString())
-        }
     }
 
     override fun onDestroy() {
@@ -40,6 +42,7 @@ class LoginActivity : BaseActivity(), LoginContract.View{
         SecurePreferences.setValue("username",et_email.text.toString())
         SecurePreferences.setValue("password",et_password.text.toString())
         SecurePreferences.setValue("expired_at",response.expires_at)
+        SecurePreferences.setValue("scheme",response.scheme)
         openNewsPage()
     }
 
@@ -47,13 +50,19 @@ class LoginActivity : BaseActivity(), LoginContract.View{
     }
 
     override fun showLoading() {
+        progressbar_login.visibility = View.VISIBLE
+        btn_login.text = ""
+        btn_login.isClickable = false
     }
 
     override fun hideLoading() {
+        progressbar_login.visibility = View.GONE
+        btn_login.text = getString(R.string.login)
+        btn_login.isClickable = true
     }
 
     private fun openNewsPage(){
-        startActivity(Intent(this, NewsActivity::class.java))
+        startActivity(Intent(this, HomeActivity::class.java))
         finish()
     }
 
@@ -62,18 +71,25 @@ class LoginActivity : BaseActivity(), LoginContract.View{
         input_layout_password.error = ""
         input_layout_email.isErrorEnabled = false
         input_layout_email.error = ""
-
     }
+
 
     override fun onServiceError(field : RetrofitResponse){
         when(field.code){
-            RESPONSE_401 -> { showToastMessage(field.message)}
-            else -> {
+            RESPONSE_422 -> {
                 when (field.name){
                     "username" -> { input_layout_email.error = field.error }
                     "password" -> { input_layout_password.error = field.error }
                 }
             }
+            else -> { showToastMessage(field.message)}
+        }
+    }
+
+    private fun viewListener(){
+        btn_login.setOnClickListener {
+            clearError()
+            loginPresenter.login(et_email.text.toString(),et_password.text.toString())
         }
     }
 }

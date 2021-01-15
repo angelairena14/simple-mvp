@@ -8,4 +8,5 @@
     <color name="whitePrimary">#FFFFFF</color>
     <color name="whiteSecondary">#F2F2F2</color>
     <color name="whiteTertiary">#E5E5E5</color>
+    <color name="greyPrimary">#888888</color>
 </resources>

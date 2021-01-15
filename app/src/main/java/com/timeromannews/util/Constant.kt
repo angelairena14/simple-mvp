@@ -7,6 +7,7 @@ object Constant {
 
     object CACHE_FILENAME {
         const val PROFILE = "profile.json"
+        const val NEWS = "news.json"
     }
 
     object RETROFIT_ERROR {

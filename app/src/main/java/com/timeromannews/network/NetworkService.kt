@@ -3,6 +3,7 @@ package com.timeromannews.network
 import com.google.gson.Gson
 import com.timeromannews.model.LoginResponse
 import com.timeromannews.model.ProfileResponse
+import com.timeromannews.model.newsresponse.NewsResponse
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -19,6 +20,9 @@ interface NetworkService {
 
     @GET("me/profile")
     fun fetchProfile(): Observable<ProfileResponse>
+
+    @GET("me/news")
+    fun fetchNews(): Observable<NewsResponse>
 
     class Creator {
         @Inject

@@ -4,7 +4,7 @@ import android.content.Context
 import com.timeromannews.ActivityModule
 import com.timeromannews.base.BaseActivity
 import com.timeromannews.ui.LoginActivity
-import com.timeromannews.ui.NewsActivity
+import com.timeromannews.ui.HomeActivity
 import dagger.Component
 
 @PerActivity
@@ -14,5 +14,5 @@ interface ActivityComponent {
     fun context(): Context
     fun inject(baseActivity: BaseActivity)
     fun inject(activity: LoginActivity)
-    fun inject(activity: NewsActivity)
+    fun inject(activity: HomeActivity)
 }
