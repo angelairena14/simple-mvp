@@ -37,7 +37,6 @@ class LoginActivity : BaseActivity(), LoginContract.View{
     }
 
     override fun onSuccessLogin(response: LoginResponse) {
-        showToastMessage("login success")
         SecurePreferences.setValue("token",response.token)
         SecurePreferences.setValue("username",et_email.text.toString())
         SecurePreferences.setValue("password",et_password.text.toString())
@@ -82,7 +81,8 @@ class LoginActivity : BaseActivity(), LoginContract.View{
                     "password" -> { input_layout_password.error = field.error }
                 }
             }
-            else -> { showToastMessage(field.message)}
+            else -> if (field.message.isNotEmpty()) showToastMessage(field.message)
+
         }
     }
 
