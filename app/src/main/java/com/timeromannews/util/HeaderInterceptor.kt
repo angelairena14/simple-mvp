@@ -51,6 +51,15 @@ class HeaderInterceptor : Interceptor {
                                 )
                             )
                         }
+                    } else {
+                        RxBus.publish(
+                            RetrofitResponse(
+                                response.code,
+                                if (obj.has(MESSAGE)) obj.getString(MESSAGE) else "",
+                                "",
+                                ""
+                            )
+                        )
                     }
                 }
             } catch (e: JSONException) {
